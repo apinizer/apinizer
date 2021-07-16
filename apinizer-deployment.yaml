@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apinizer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager
+  namespace: apinizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: manager
+      version: 'v1'
+  template:
+    metadata:
+      labels:
+        app: manager
+        version: 'v1'
+    spec:
+      containers:
+        - name: manager
+          image: apinizercloud/manager:2021.07.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MY_HOST_IP
+              valueFrom:
+               fieldRef:
+                fieldPath: status.hostIP
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATA_MONGODB_DATABASE
+              value: apinizerdb
+            - name: SPRING_DATA_MONGODB_URI
+              value: 'mongodb://apinizer:Apinizer.1@$(MY_HOST_IP):25080/?authSource=admin&replicaSet=apinizer-replicaset'
+            - name: JAVA_OPTS
+              value: ' -Xmx2400m -Xms2400m'
+          resources:
+            requests:
+              memory: '3Gi'
+              cpu: '1'
+            limits:
+              memory: '3Gi'
+              cpu: '1'
+          ports:
+            - name: http
+              containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manager
+  namespace: apinizer
+  labels:
+    app: manager
+spec:
+  selector:
+    app: manager
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
