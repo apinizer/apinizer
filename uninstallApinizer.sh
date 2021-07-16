@@ -1,4 +1,5 @@
 #!/bin/sh
+#########curl -sSL https://get.docker.com/ | sh
 ### Uninstall Elasticsearch
 
 ### Uninstall MongoDB
