@@ -4,7 +4,7 @@
 ### Uninstall MongoDB
 sudo service mongod stop
 
-sudo apt-get purge mongodb-org*
+sudo apt-get purge mongodb-org* -y
 
 sudo rm -r /var/log/mongodb
 
