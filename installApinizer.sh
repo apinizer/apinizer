@@ -1,5 +1,5 @@
 #!/bin/sh
-### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/uninstallApinizer.sh | bash
+### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 sudo apt-get update  
 
 sudo apt -y install curl apt-transport-https wget ca-certificates curl software-properties-common
