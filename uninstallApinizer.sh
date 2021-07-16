@@ -14,7 +14,7 @@ sudo rm -r /var/lib/mongodb
 ### Uninstall Kubernetes
 
 sudo apt purge kubectl kubeadm kubelet kubernetes-cni -y
-sudo apt autoremove
+sudo apt autoremove -y
 sudo rm -fr /etc/kubernetes/; sudo rm -fr ~/.kube/; sudo rm -fr /var/lib/etcd; sudo rm -rf /var/lib/cni/
 
 sudo systemctl daemon-reload
