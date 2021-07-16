@@ -1,5 +1,5 @@
 #!/bin/sh
-#########curl -sSL https://get.docker.com/ | sh
+######### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/uninstallApinizer.sh | bash
 ### Uninstall Elasticsearch
 
 ### Uninstall MongoDB
