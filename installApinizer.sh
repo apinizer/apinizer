@@ -125,6 +125,10 @@ EOF'
  
 kubectl create -f role-binding.yaml
 
+kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts
+
+kubectl create clusterrolebinding kubernetes-dashboard -n kube-system --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+
 kubectl apply -f https://raw.githubusercontent.com/apinizer/apinizer/main/apinizer-deployment.yaml
 
 echo 'Wait, Installation in progress...' 
