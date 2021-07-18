@@ -202,3 +202,5 @@ mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -
 sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) elasticsearch
 
 
+echo 'Apinizer API Management Platform Installation Successfully'
+
