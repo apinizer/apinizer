@@ -125,7 +125,7 @@ EOF'
  
 kubectl create -f role-binding.yaml
 
-kubeclt apply -f https://raw.githubusercontent.com/apinizer/apinizer/main/apinizer-deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/apinizer/apinizer/main/apinizer-deployment.yaml
 
 echo 'Wait, Installation in progress...' 
 sleep 60
