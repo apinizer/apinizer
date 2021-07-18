@@ -129,11 +129,6 @@ kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin
 
 kubectl create clusterrolebinding kubernetes-dashboard -n kube-system --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 
-kubectl apply -f https://raw.githubusercontent.com/apinizer/apinizer/main/apinizer-deployment.yaml
-
-echo 'Wait, Installation in progress...' 
-sleep 60
-
 # Install MongoDB Replicaset
 #!/bin/sh
 sudo apt-get update  
@@ -206,6 +201,14 @@ EOF'
 
 mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" mongoReplicaChange.js
 
+
+curl https://github.com/apinizer/apinizer/raw/main/apinizer-initialdb.archive -o apinizer-initialdb.archive
+
+######## Deploy Apinizer 
+kubectl apply -f https://raw.githubusercontent.com/apinizer/apinizer/main/apinizer-deployment.yaml
+
+echo 'Wait, Installation in progress...' 
+sleep 60
 
 ######## Install elasticsearch
 sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) elasticsearch
