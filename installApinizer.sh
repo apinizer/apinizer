@@ -79,8 +79,8 @@ sudo systemctl enable kubelet
 sudo systemctl start kubelet
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
    
-   
-sleep 90
+echo 'Wait, Installation in progress...' 
+sleep 60
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -125,6 +125,10 @@ EOF'
  
 kubectl create -f role-binding.yaml
 
+kubeclt apply -f https://raw.githubusercontent.com/apinizer/apinizer/main/apinizer-deployment.yaml
+
+echo 'Wait, Installation in progress...' 
+sleep 60
 
 # Install MongoDB Replicaset
 #!/bin/sh
