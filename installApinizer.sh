@@ -1,4 +1,5 @@
 #!/bin/sh
+echo 'Started Apinizer API Management Platform Installation'
 ### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 sudo apt-get update  
 
