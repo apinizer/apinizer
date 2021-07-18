@@ -202,7 +202,12 @@ EOF'
 mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" mongoReplicaChange.js
 
 
-curl https://github.com/apinizer/apinizer/raw/main/apinizer-initialdb.archive -o apinizer-initialdb.archive
+wget https://github.com/apinizer/apinizer/raw/main/apinizer-initialdb.archive
+
+mongorestore --host=localhost --port=25080 --username=apinizer --password Apinizer.1 --authenticationDatabase=admin --gzip --archive=apinizer-initialdb.archive
+
+echo 'Wait, Installation in progress...' 
+sleep 60
 
 ######## Deploy Apinizer 
 kubectl apply -f https://raw.githubusercontent.com/apinizer/apinizer/main/apinizer-deployment.yaml
