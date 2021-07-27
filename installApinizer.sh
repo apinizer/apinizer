@@ -1,4 +1,20 @@
 #!/bin/sh
+echo
+echo -e "	  _      ____    ___   _   _   ___   _____  _____   ____                  \033[0m"
+echo -e "    / \    |  _ \  |_ _| | \ | | |_ _| |__  / | ____| |  _ \			      \033[0m"
+echo -e "   / _ \   | |_) |  | |  |  \| |  | |    / /  |  _|   | |_) |			      \033[0m"
+echo -e "  / ___ \  |  __/   | |  | |\  |  | |   / /_  | |___  |  _ <			      \033[0m"
+echo -e " /_/   \_\ |_|     |___| |_| \_| |___| /____| |_____| |_| \_\			      \033[0m"
+echo -e "                   \033[0mhttps://apinizer.com\033[0m"                       
+echo -e "                                                                             \033[0m"
+echo -e "                  _____ _____    _____  _       _    __                      \033[0m"
+echo -e "            /\   |  __ \_   _|  |  __ \| |     | |  / _|                     \033[0m"
+echo -e "           /  \  | |__) || |    | |__) | | __ _| |_| |_ ___  _ __ _ __ ___   \033[0m"
+echo -e "          / /\ \ |  ___/ | |    |  ___/| |/ _  | __|  _/ _ \|  __|  _   _ \  \033[0m"
+echo -e "         / ____ \| |    _| |_   | |    | | (_| | |_| || (_) | |  | | | | | | \033[0m"
+echo -e "        /_/    \_\_|   |_____|  |_|    |_|\__,_|\__|_| \___/|_|  |_| |_| |_| \033[0m"
+echo -e "                                                                             \033[0m"
+
 echo 'Started Apinizer API Management Platform Installation'
 ### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 sudo apt-get update  
