@@ -15,7 +15,8 @@ sudo rm -rf /var/lib/mongodb
 
 sudo apt purge kubectl kubeadm kubelet kubernetes-cni -y
 sudo apt autoremove -y
-sudo rm -fr /etc/kubernetes/; sudo rm -fr ~/.kube/; sudo rm -fr /var/lib/etcd; sudo rm -rf /var/lib/cni/
+sudo rm -rf /etc/kubernetes/; sudo rm -fr ~/.kube/; sudo rm -fr /var/lib/etcd; sudo rm -rf /var/lib/cni/
+sudo rm -rf /etc/cni /etc/kubernetes /var/lib/dockershim /var/lib/etcd /var/lib/kubelet /var/run/kubernetes ~/.kube/*
 
 sudo systemctl daemon-reload
 
