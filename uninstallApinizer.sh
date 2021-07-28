@@ -33,6 +33,7 @@ sudo groupdel docker
 sudo rm -rf /var/run/docker.sock
 
 ### Uninstall Elasticsearch
+sudo systemctl stop elasticsearch
 sudo rm -rf /opt/elasticsearch
 
 sudo rm -rf /etc/systemd/system/elasticsearch.service
