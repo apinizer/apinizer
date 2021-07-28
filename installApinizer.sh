@@ -216,7 +216,6 @@ EOF'
 
 mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" mongoReplicaChange.js
 
-
 wget https://github.com/apinizer/apinizer/raw/main/apinizer-initialdb.archive
 
 mongorestore --host=localhost --port=25080 --username=apinizer --password Apinizer.1 --authenticationDatabase=admin --gzip --archive=apinizer-initialdb.archive
@@ -233,6 +232,16 @@ sleep 60
 ######## Install elasticsearch
 sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) elasticsearch
 
+echo 'Wait, Installation in progress...' 
+sleep 60
+
+bash -c 'cat << EOF > changeElasticIp.js
+db.environment_log_server.updateOne(
+{ "name": "ElasticsearchLocal" },
+{ "$set": { "elasticHostList.$[].host": nodeIpPort } }
+)
+
+mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" changeElasticIp.js
 
 echo 'Apinizer API Management Platform Installation Successfully'
 
