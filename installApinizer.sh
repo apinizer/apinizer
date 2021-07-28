@@ -230,7 +230,109 @@ echo 'Wait, Installation in progress...'
 sleep 60
 
 ######## Install elasticsearch
+
+sudo adduser elasticsearch
+
 sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) elasticsearch
+
+sudo usermod -aG sudo elasticsearch
+
+ulimit -n 65535
+
+
+sudo bash -c 'cat << EOF > /etc/security/limits.conf
+elasticsearch  -  nofile  65535
+elasticsearch soft memlock unlimited
+elasticsearch hard memlock unlimited
+EOF'
+
+sudo sysctl -w vm.swappiness=1
+
+sudo sysctl -w vm.max_map_count=262144
+
+sudo bash -c 'cat << EOF > /etc/sysctl.conf
+vm.max_map_count=262144 elasticsearch
+EOF'
+
+
+sudo sysctl -p
+
+sudo sysctl vm.max_map_count
+
+sudo mkdir -p /opt/elasticsearch
+
+sudo chown -Rf elasticsearch:elasticsearch /opt/elasticsearch
+
+sudo chmod -Rf 775 /opt/elasticsearch
+
+sudo mkdir -p /mnt/elastic-data/
+
+sudo chown -Rf elasticsearch:elasticsearch /mnt/elastic-data/
+
+sudo chmod -Rf 775 /mnt/elastic-data/
+
+cd /opt/elasticsearch
+
+sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2-linux-x86_64.tar.gz
+
+sudo tar -xzf elasticsearch-7.9.2-linux-x86_64.tar.gz
+
+sudo bash -c 'cat << EOF > /opt/elasticsearch/elasticsearch-7.9.2/config/elasticsearch.yml
+cluster.name: ApinizerEsCluster
+#give your node a name (the same as your hostname)
+node.name: "apinizeres"
+node.master: true
+node.data: true
+#enter the private IP and port of your node (the same ip as your machine)
+network.host: 0.0.0.0
+http.port: 9200
+#detail the private IPs of your nodes:
+#to avoid split brain ([Master Eligible Node) / 2 + 1])
+
+cluster.initial_master_nodes: ["0.0.0.0"]
+
+discovery.seed_hosts: []
+path.data: /mnt/elastic-data/
+
+bootstrap.memory_lock: true
+
+http.cors.enabled : true
+http.cors.allow-origin : "*"
+http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length
+EOF'
+
+sudo wget https://raw.githubusercontent.com/apinizer/apinizer/main/elasticsearch-service.sh -O /opt/elasticsearch/elasticsearch-7.9.2/bin/elasticsearch-service.sh
+
+sudo chown -Rf elasticsearch:elasticsearch /opt/elasticsearch/elasticsearch-7.9.2/*
+sudo chmod -Rf 775 /opt/elasticsearch/elasticsearch-7.9.2/*
+
+sudo bash -c 'cat << EOF > /etc/systemd/system/elasticsearch.service
+#!/bin/sh
+[Unit]
+Description=ElasticSearch Server
+After=network.target
+After=syslog.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/opt/elasticsearch/elasticsearch-7.9.2/bin/elasticsearch-service.sh start
+ExecStop=/opt/elasticsearch/elasticsearch-7.9.2/bin/elasticsearch-service.sh stop
+ExecReload=/opt/elasticsearch/elasticsearch-7.9.2/bin/elasticsearch-service.sh restart
+LimitNOFILE=65536
+LimitMEMLOCK=infinity
+User=elasticsearch
+EOF'
+
+sudo systemctl daemon-reload
+
+sudo systemctl start elasticsearch
+
+sudo systemctl enable elasticsearch
+
 
 echo 'Wait, Installation in progress...' 
 sleep 60
