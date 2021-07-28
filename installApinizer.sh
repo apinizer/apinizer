@@ -93,6 +93,7 @@ sudo apt update
 sudo apt -y install kubelet=1.18.4-00 kubeadm=1.18.4-00 kubectl=1.18.4-00
 sudo systemctl enable kubelet
 sudo systemctl start kubelet
+sleep 20
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
    
 echo 'Wait, Installation in progress...' 
