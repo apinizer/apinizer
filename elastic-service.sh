@@ -1,5 +1,5 @@
 #!/bin/sh
-### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
+### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/elastic-service.sh | bash
 SERVICE_NAME=elasticsearch
 PATH_TO_APP="/opt/elasticsearch/elasticsearch-7.9.2/bin/$SERVICE_NAME"
 PID_PATH_NAME="/opt/elasticsearch/elasticsearch-7.9.2/bin/$SERVICE_NAME.pid"
