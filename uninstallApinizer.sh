@@ -34,7 +34,7 @@ sudo rm -rf /var/run/docker.sock
 ### Uninstall Elasticsearch
 sudo rm -rf /opt/elasticsearch
 
-/etc/systemd/system/elasticsearch.service
+sudo rm -rf /etc/systemd/system/elasticsearch.service
 
 sudo systemctl daemon-reload
 echo 'Apinizer uninstall Successfully'
