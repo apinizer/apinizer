@@ -242,7 +242,7 @@ db.environment_log_server.updateOne(
 )
 EOF'
 
-mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" changeElasticIp.js
+mongo mongodb://localhost:25080/apinizerdb --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --eval "var nodeIpPort='$NODE_IP'" changeElasticIp.js
 
 echo 'Apinizer API Management Platform Installation Successfully'
 
