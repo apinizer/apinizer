@@ -240,6 +240,7 @@ db.environment_log_server.updateOne(
 { "name": "ElasticsearchLocal" },
 { "$set": { "elasticHostList.$[].host": nodeIpPort } }
 )
+EOF'
 
 mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" changeElasticIp.js
 
