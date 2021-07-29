@@ -39,4 +39,7 @@ sudo rm -rf /opt/elasticsearch
 sudo rm -rf /etc/systemd/system/elasticsearch.service
 
 sudo systemctl daemon-reload
+
+rm -rf admin-user.yaml apinizer-initialdb.archive changeElasticIp.js mongoReplicaChange.js mongoUser.js role-binding.yaml
+
 echo 'Apinizer uninstall Successfully'
