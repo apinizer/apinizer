@@ -335,14 +335,9 @@ sudo systemctl enable elasticsearch
 
 
 echo 'Wait, Installation in progress...' 
-sleep 60
+sleep 30
 
-bash -c 'cat << EOF > changeElasticIp.js
-db.environment_log_server.updateOne(
-{ "name": "ElasticsearchLocal" },
-{ "$set": { "elasticHostList.$[].host": nodeIpPort } }
-)
-EOF'
+sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2-linux-x86_64.tar.gz
 
 mongo mongodb://localhost:25080/apinizerdb --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --eval "var nodeIpPort='$NODE_IP'" changeElasticIp.js
 
