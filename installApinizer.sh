@@ -216,7 +216,7 @@ EOF'
 
 mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" mongoReplicaChange.js
 
-wget https://github.com/apinizer/apinizer/raw/main/apinizer-initialdb.archive
+wget --no-cache https://github.com/apinizer/apinizer/raw/main/apinizer-initialdb.archive
 
 mongorestore --host=localhost --port=25080 --username=apinizer --password Apinizer.1 --authenticationDatabase=admin --gzip --archive=apinizer-initialdb.archive
 
@@ -273,7 +273,7 @@ sudo chmod -Rf 775 /mnt/elastic-data/
 
 cd /opt/elasticsearch
 
-sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2-linux-x86_64.tar.gz
+sudo wget --no-cache https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2-linux-x86_64.tar.gz
 
 sudo tar -xzf elasticsearch-7.9.2-linux-x86_64.tar.gz
 
@@ -302,7 +302,7 @@ http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length
 EOF'
 
-sudo wget https://raw.githubusercontent.com/apinizer/apinizer/main/elasticsearch-service.sh -O /opt/elasticsearch/elasticsearch-7.9.2/bin/elasticsearch-service.sh
+sudo wget --no-cache https://raw.githubusercontent.com/apinizer/apinizer/main/elasticsearch-service.sh -O /opt/elasticsearch/elasticsearch-7.9.2/bin/elasticsearch-service.sh
 
 sudo chown -Rf elasticsearch:elasticsearch /opt/elasticsearch/elasticsearch-7.9.2/*
 sudo chmod -Rf 775 /opt/elasticsearch/elasticsearch-7.9.2/*
@@ -337,7 +337,7 @@ sudo systemctl enable elasticsearch
 echo 'Wait, Installation in progress...' 
 sleep 30
 
-sudo wget https://raw.githubusercontent.com/apinizer/apinizer/main/changeElasticIp.js
+sudo wget --no-cache https://raw.githubusercontent.com/apinizer/apinizer/main/changeElasticIp.js
 
 mongo mongodb://localhost:25080/apinizerdb --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --eval "var nodeIpPort='$NODE_IP'" changeElasticIp.js
 
