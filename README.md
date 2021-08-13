@@ -13,19 +13,20 @@ Apinizer is a product family that enables the following tasks to be done easily 
 - Apinizer Platform: Providing API teams a single, integrated API Development Lifecycle Management platform which users with various roles can work collaboratively and operate API lifecycle steps such as requirement setting, documentation, design, development, testing, publishing, versioning, monitoring, analytics, reporting and releasing.
 
 # Documentation
-You can find https://docs.apinizer.com API Management documentation from https://apinizer.com website.
+You can find documentation at https://docs.apinizer.com. 
+Official web site is at https://apinizer.com. 
 
-# Apinizer Installation
+# Installation
 ### Minimum Requirements
 - 4 Core CPU
 - 8 GB Ram
-#### Run the following script on Ubuntu 2020.04 LTS version for Apinizer Installation.
+#### Run the following script on Ubuntu 2020.04 LTS version to install Apinizer.
 ```
 sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 ```
 
-# Apinizer completely uninstall
-#### Run the following script on server  for Apinizer Uninstall.
+# Uninstallation
+#### Run the following script on the server to uninstall Apinizer completely.
 ```
 sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/uninstallApinizer.sh | bash
 ```
