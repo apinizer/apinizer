@@ -336,3 +336,4 @@ mongo mongodb://localhost:25080/apinizerdb --authenticationDatabase "admin" -u "
 
 echo 'Apinizer API Management Platform Installation Successfully'
 
+echo "Access to Apinizer Management Console Address : http://$NODE_IP:32080"
