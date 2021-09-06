@@ -32,7 +32,7 @@ Default Address : **http://YOUR-IP-ADDRESS:32080**
 Default username : **admin**
 Default password : **Apinizer.1!**
 
-![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-login.png)
+![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-0.png)
 
 ### Step – 1 : Create Index Lifecycle Policies and Index Templates
 Go to Elasticsearch Clusters Menu (Administration -> Server Management -> Elasticsearch Clusters)
