@@ -1,4 +1,4 @@
-# Apinizer Management Platform
+# Apinizer API Lifecycle Management Platform
 Apinizer is a product family that enables the following tasks to be done easily and quickly with simple configurations, without writing code as much as possible:
 
 - Apinizer API Gateway: Performing security, traffic management, load balancing, logging, message content conversion and enrichment, validation, testing and many other tasks related to API/Web Services by configuration via form-based interfaces without writing code.
@@ -25,8 +25,8 @@ Official web site is at https://apinizer.com.
 sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 ```
 
-## Counfiguration Step
-### Login to Apinizer Management Console
+## Configuration
+### Step - 1: Login to Apinizer Management Console
 
 Default Address : **http://YOUR-IP-ADDRESS:32080** <br />
 Default username : **admin** <br />
@@ -34,7 +34,7 @@ Default password : **Apinizer.1!** <br />
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-0.png)
 
-### Step – 1 : Create Index Lifecycle Policies and Index Templates
+### Step – 2: Create Index Lifecycle Policies and Index Templates
 Go to Elasticsearch Clusters Menu (Administration -> Server Management -> Elasticsearch Clusters)
 Click **red cards** for Create Index Lifecycle Policies and Index Templates.
 
@@ -44,7 +44,7 @@ After clicking to **red cards**, you should see them as below.
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-2.png)
 
-### Step – 2 : Publish Environment on Kubernetes.
+### Step – 3: Publish Environment on Kubernetes.
 Go to Gateway Environments (Administration -> Server Management -> Gateway Environments)
 Click **unpublished** button for Publish Environment on Kubernetes.
 
@@ -54,21 +54,18 @@ After clicking to **unpublished** button, you should see them as below after abo
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-4.png)
 
-
-### Step – 3 : Create first API Proxy and Publish
+### Step – 4: Create first API Proxy and Publish
 Select default project on topbar.<br />
-
-![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-4.png)
 
 Select the default project from the window that comes up.<br />
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-5.png)
 
-**You can will see, left menu changed.**<br />
+**You will see that left menu changs.**<br />
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-6.png)
 
-**Not:** Quick Menu and Main Menu are prepared according to the roles and privileges of the active user.
+**Note:** Quick Menu and Main Menu are prepared according to the roles and privileges of the active user.
 Two different menus can be displayed in the Main Menu area:
 •	If the active user has selected a Project, i.e. if the project name appears on the far left in the Quick Menu, ("demo" appears in this image), the Developer Menu is displayed. Jobs related to the items in this menu are described in the Developer's Guide.
 •	If the active user has the Administrator role and selects any item from the Quick Menu (for example, clicks on Overview), the Admin Menu is displayed. Jobs related to the items in this menu are described in the Administrator's Guide.
