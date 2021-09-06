@@ -28,9 +28,9 @@ sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApi
 ## Counfiguration Step
 ### Login to Apinizer Management Console
 
-Default Address : **http://YOUR-IP-ADDRESS:32080**
-Default username : **admin**
-Default password : **Apinizer.1!**
+Default Address : **http://YOUR-IP-ADDRESS:32080** <br />
+Default username : **admin** <br />
+Default password : **Apinizer.1!** <br />
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-0.png)
 
