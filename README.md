@@ -31,6 +31,10 @@ Go to Elasticsearch Clusters Menu (Administration -> Server Management -> Elasti
 Click red cards for Create Index Lifecycle Policies and Index Templates.
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-1.png)
 
+After clicking to red cards, you should see them as below.
+![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-2.png)
+
+
 # Uninstallation
 #### Run the following script on the server to uninstall Apinizer completely.
 ```
