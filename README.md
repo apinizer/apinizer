@@ -25,6 +25,12 @@ Official web site is at https://apinizer.com.
 sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 ```
 
+## Counfiguration Step
+### Step – 1 : Create Index Lifecycle Policies and Index Templates
+Go to Elasticsearch Clusters Menu (Administration -> Server Management -> Elasticsearch Clusters)
+Click red cards for Create Index Lifecycle Policies and Index Templates.
+![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-1.png)
+
 # Uninstallation
 #### Run the following script on the server to uninstall Apinizer completely.
 ```
