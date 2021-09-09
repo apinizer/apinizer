@@ -10,7 +10,7 @@ echo -e "                                                                       
 
 echo 'Started Apinizer API Management Platform Installation'
 
-curl https://api.countapi.xyz/hit/ertrugrul
+curl https://api.countapi.xyz/hit/apinizerInstall
 
 ### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 sudo apt-get update  
