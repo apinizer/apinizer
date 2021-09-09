@@ -1,4 +1,7 @@
 #!/bin/sh
+
+curl https://api.countapi.xyz/hit/apinizerUninstall
+
 ######### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/uninstallApinizer.sh | bash
 ### Uninstall Elasticsearch
 
