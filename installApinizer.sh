@@ -9,6 +9,9 @@ echo -e "                   \033[0mhttps://apinizer.com\033[0m"
 echo -e "                                                                             \033[0m"
 
 echo 'Started Apinizer API Management Platform Installation'
+
+curl https://api.countapi.xyz/hit/ertrugrul
+
 ### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 sudo apt-get update  
 
