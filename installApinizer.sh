@@ -13,7 +13,8 @@ echo 'Started Apinizer API Management Platform Installation'
 curl https://api.countapi.xyz/hit/apinizerInstall
 
 ### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
-sudo adduser apinizer
+sudo adduser --disabled-password --gecos "" apinizer
+sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) aslan
 sudo usermod -aG sudo apinizer
 
 sudo su - apinizer
