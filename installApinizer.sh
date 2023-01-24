@@ -18,7 +18,8 @@ curl https://api.countapi.xyz/hit/apinizerInstall
 ### sudo usermod -aG sudo apinizer
 ### sudo su - apinizer
 
-### /etc/hosts içindeki 127.0.1.1 değerini temizle
+### remove 127.0.1.1 in /etc/hosts
+sed -i '/127.0.1.1/d' /etc/hosts
 
 CURRENT_USER=$(whoami)
 
