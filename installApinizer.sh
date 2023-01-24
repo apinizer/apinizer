@@ -253,7 +253,7 @@ sleep 60
 
 ######## Install elasticsearch
 
-sudo adduser elasticsearch
+sudo adduser --disabled-password --gecos "" elasticsearch 
 
 sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) elasticsearch
 
