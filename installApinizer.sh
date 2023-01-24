@@ -13,6 +13,17 @@ echo 'Started Apinizer API Management Platform Installation'
 curl https://api.countapi.xyz/hit/apinizerInstall
 
 ### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
+sudo adduser apinizer
+sudo usermod -aG sudo apinizer
+
+sudo su - apinizer
+
+sudo apt update
+
+sudo apt -y full-upgrade
+
+[ -f /var/run/reboot-required ] && sudo reboot -f
+
 sudo apt-get update  
 
 sudo apt -y install curl apt-transport-https wget ca-certificates curl software-properties-common
@@ -41,6 +52,11 @@ net.ipv4.tcp_wmem=4096 277750 134217728
 net.core.netdev_max_backlog=300000
 EOF'
 
+sudo tee /etc/modules-load.d/k8s.conf <<EOF
+overlay
+br_netfilter
+EOF
+
 sudo modprobe br_netfilter
 
 sudo sysctl --system
@@ -50,45 +66,37 @@ sudo lsmod | grep br_netfilter
 sudo apt update
 
 sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
-
+# Add Docker repo
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
+# Install containerd
 sudo apt update
+sudo apt install -y containerd.io
 
-sudo apt install -y containerd.io docker-ce docker-ce-cli
+# Configure containerd and start service
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
 
-sudo mkdir -p /etc/systemd/system/docker.service.d
-   
-   
-sudo bash -c 'cat << EOF > /etc/docker/daemon.json
-{
-   "exec-opts": ["native.cgroupdriver=systemd"]
-}
-EOF'
+sudo sed -i 's/SystemdCgroup = abc/SystemdCgroup = true/g' /etc/containerd/config.toml
 
-sudo systemctl daemon-reload 
-sudo systemctl restart docker
-sudo systemctl enable docker
-
-sudo groupadd docker
-
-sudo gpasswd -a $USER docker
+# restart containerd
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+systemctl status containerd
 
 
 # Install Kubernetes
    
+curl -fsSL  https://packages.cloud.google.com/apt/doc/apt-key.gpg|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/k8s.gpg
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-   
-sudo bash -c 'cat << EOF > /etc/apt/sources.list.d/kubernetes.list
-deb http://apt.kubernetes.io/ kubernetes-xenial main
-EOF'
-   
-sudo apt update
-sudo apt -y install kubelet=1.18.4-00 kubeadm=1.18.4-00 kubectl=1.18.4-00
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt -y install kubelet=1.24.10-00 kubeadm=1.24.10-00 kubectl=1.24.10-00
+sudo apt-mark hold kubelet kubeadm kubectl
+
+kubectl version --client && kubeadm version
 sudo systemctl enable kubelet
-sudo systemctl start kubelet
 sleep 20
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
    
@@ -102,7 +110,7 @@ sudo chown -R $(id -u):$(id -g) $HOME/.kube
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 echo 'Wait, Installation in progress...' 
-sleep 10
+sleep 20
  
 # Allow workloads to be scheduled to the master node
 kubectl taint nodes `hostname`  node-role.kubernetes.io/master:NoSchedule-
@@ -142,43 +150,60 @@ kubectl create clusterrolebinding kubernetes-dashboard -n kube-system --clusterr
 
 # Install MongoDB Replicaset
 #!/bin/sh
-sudo apt-get update  
-
-sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
-
-sudo swapoff -a
-
-wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
-
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
 
 sudo apt update
+sudo apt install -y curl wget net-tools gnupg2 software-properties-common apt-transport-https ca-certificates lsb-release
 
+
+wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb
+sudo dpkg -i ./libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb
+
+
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/mongodb-6.gpg
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+
+sudo apt update
 sudo apt install mongodb-org -y
+
+sudo mkdir -p /etc/mongodb/keys/
+
+sudo chown -Rf apinizer:apinizer /etc/mongodb/keys
+sudo chmod -Rf 700 /etc/mongodb/keys
+
+sudo openssl rand -base64 756 > /etc/mongodb/keys/mongo-key
+
+sudo chmod -Rf 400 /etc/mongodb/keys/mongo-key
+sudo chown -Rf mongodb:mongodb /etc/mongodb
 
 sudo bash -c 'cat << EOF > /etc/mongod.conf
 storage:
   dbPath: /var/lib/mongodb
-  journal:
-    enabled: true
+  wiredTiger:
+    engineConfig:
+       cacheSizeGB: 2
 
 systemLog:
   destination: file
   logAppend: true
   path: /var/log/mongodb/mongod.log
 
-processManagement:
-  timeZoneInfo: /usr/share/zoneinfo
-
 net:
   port: 25080
   bindIp: 0.0.0.0
 
 replication:
- replSetName: apinizer-replicaset
+  replSetName: apinizer-replicaset
 
 security:
-    authorization: "enabled"
+  authorization: enabled
+  keyFile:  /etc/mongodb/keys/mongo-key
+
+setParameter:
+  transactionLifetimeLimitSeconds: 300
+
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
 EOF'
 
 sudo systemctl start mongod
@@ -187,7 +212,7 @@ sudo systemctl enable mongod
 
 sleep 60
 
-mongo mongodb://localhost:25080 --eval "rs.initiate()"
+mongosh mongodb://localhost:25080 --eval "rs.initiate()"
 
 bash -c 'cat << EOF > mongoUser.js
 use admin
@@ -200,7 +225,7 @@ db.createUser(
  );
 EOF'
 
-mongo mongodb://localhost:25080 < mongoUser.js
+mongosh mongodb://localhost:25080 < mongoUser.js
 
 NODE_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o jsonpath='{$.items[*].status.addresses[?(@.type=="InternalIP")].address}')
 
@@ -210,7 +235,7 @@ cfg.members[0].host = nodeIpPort
 rs.reconfig(cfg)
 EOF'
 
-mongo mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" mongoReplicaChange.js
+mongosh mongodb://localhost:25080 --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --quiet --eval "var nodeIpPort='$NODE_IP:25080'" mongoReplicaChange.js
 
 wget --no-cache https://github.com/apinizer/apinizer/raw/main/apinizer-initialdb.archive
 
@@ -234,7 +259,6 @@ sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) elasticsea
 sudo usermod -aG sudo elasticsearch
 
 ulimit -n 65535
-
 
 sudo bash -c 'cat << EOF > /etc/security/limits.conf
 elasticsearch  -  nofile  65535
