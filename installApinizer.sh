@@ -18,6 +18,14 @@ curl https://api.countapi.xyz/hit/apinizerInstall
 ### sudo usermod -aG sudo apinizer
 ### sudo su - apinizer
 
+CURRENT_USER=$(whoami)
+
+echo 'Current User:' $CURRENT_USER
+
+NODE_IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+
+echo 'Your Server IP Address:' $NODE_IP
+
 sudo apt update
 
 sudo apt -y full-upgrade
@@ -171,7 +179,7 @@ sudo apt install mongodb-org -y
 
 sudo mkdir -p /etc/mongodb/keys/
 
-sudo chown -Rf apinizer:apinizer /etc/mongodb/keys
+sudo chown -Rf $CURRENT_USER:$CURRENT_USER /etc/mongodb/keys
 sudo chmod -Rf 700 /etc/mongodb/keys
 
 sudo openssl rand -base64 756 > /etc/mongodb/keys/mongo-key
@@ -229,8 +237,6 @@ db.createUser(
 EOF'
 
 mongosh mongodb://localhost:25080 < mongoUser.js
-
-NODE_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o jsonpath='{$.items[*].status.addresses[?(@.type=="InternalIP")].address}')
 
 bash -c 'cat << EOF > mongoReplicaChange.js
 cfg = rs.conf()
