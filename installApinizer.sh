@@ -18,6 +18,8 @@ curl https://api.countapi.xyz/hit/apinizerInstall
 ### sudo usermod -aG sudo apinizer
 ### sudo su - apinizer
 
+### /etc/hosts içindeki 127.0.1.1 değerini temizle
+
 CURRENT_USER=$(whoami)
 
 echo 'Current User:' $CURRENT_USER
