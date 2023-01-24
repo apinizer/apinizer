@@ -362,7 +362,7 @@ sleep 30
 
 sudo wget --no-cache https://raw.githubusercontent.com/apinizer/apinizer/main/changeElasticIp.js
 
-mongo mongodb://localhost:25080/apinizerdb --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --eval "var nodeIpPort='$NODE_IP'" changeElasticIp.js
+mongosh mongodb://localhost:25080/apinizerdb --authenticationDatabase "admin" -u "apinizer" -p "Apinizer.1" --eval "var nodeIpPort='$NODE_IP'" changeElasticIp.js
 
 echo 'Apinizer API Management Platform Installation Successfully'
 
