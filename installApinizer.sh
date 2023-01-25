@@ -29,9 +29,9 @@ NODE_IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 
 echo 'Your Server IP Address:' $NODE_IP
 
-systemctl stop ufw
+sudo systemctl stop ufw
 
-systemctl disable ufw
+sudo systemctl disable ufw
 
 sudo apt update
 
