@@ -112,7 +112,7 @@ sudo apt-mark hold kubelet kubeadm kubectl
 kubectl version --client && kubeadm version
 sudo systemctl enable kubelet
 sleep 20
-sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+sudo kubeadm init --pod-network-cidr "10.244.0.0/16" --control-plane-endpoint "$NODE_IP" --upload-certs
    
 echo 'Wait, Installation in progress...' 
 sleep 90
