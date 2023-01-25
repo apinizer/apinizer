@@ -35,11 +35,9 @@ systemctl disable ufw
 
 sudo apt update
 
-sudo apt -y full-upgrade
+### sudo apt -y full-upgrade
 
-[ -f /var/run/reboot-required ] && sudo reboot -f
-
-sudo apt-get update  
+###  [ -f /var/run/reboot-required ] && sudo reboot -f
 
 sudo apt -y install curl apt-transport-https wget ca-certificates curl software-properties-common
 
