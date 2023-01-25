@@ -117,7 +117,7 @@ sudo systemctl enable kubelet
 sudo lsmod | grep br_netfilter
 
 sleep 20
-sudo kubeadm init --pod-network-cidr "10.244.0.0/16" --control-plane-endpoint "$NODE_IP" --upload-certs
+sudo kubeadm init --pod-network-cidr "10.244.0.0/16" --control-plane-endpoint "$NODE_IP"
    
 echo 'Wait, Installation in progress...' 
 sleep 90
