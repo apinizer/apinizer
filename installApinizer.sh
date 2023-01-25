@@ -17,6 +17,7 @@ curl https://api.countapi.xyz/hit/apinizerInstall
 ### sudo usermod --password $(echo Apinizer.1 | openssl passwd -1 -stdin) apinizer
 ### sudo usermod -aG sudo apinizer
 ### sudo su - apinizer
+### disable ipv6
 
 ### remove 127.0.1.1 in /etc/hosts
 sed -i '/127.0.1.1/d' /etc/hosts
