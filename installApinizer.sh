@@ -22,6 +22,15 @@ curl https://api.countapi.xyz/hit/apinizerInstall
 ### remove 127.0.1.1 in /etc/hosts
 sed -i '/127.0.1.1/d' /etc/hosts
 
+sudo bash -c 'cat << EOF > /etc/sysctl.conf
+vm.max_map_count=262144 elasticsearch
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+EOF'
+
+sudo sysctl -p
+
+
 CURRENT_USER=$(whoami)
 
 echo 'Current User:' $CURRENT_USER
@@ -36,13 +45,17 @@ sudo systemctl disable ufw
 
 sudo apt update
 
-### sudo apt -y full-upgrade
-
-###  [ -f /var/run/reboot-required ] && sudo reboot -f
-
-sudo apt -y install curl apt-transport-https wget ca-certificates curl software-properties-common
+sudo apt install -y curl wget net-tools gnupg2 software-properties-common apt-transport-https ca-certificates
 
 sudo swapoff -a
+
+sudo tee /etc/modules-load.d/k8s.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
 
 sudo bash -c 'cat << EOF > /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -66,23 +79,18 @@ net.ipv4.tcp_wmem=4096 277750 134217728
 net.core.netdev_max_backlog=300000
 EOF'
 
-sudo tee /etc/modules-load.d/k8s.conf <<EOF
-overlay
-br_netfilter
-EOF
-
-sudo modprobe br_netfilter
 
 sudo sysctl --system
 
 sudo lsmod | grep br_netfilter
 
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+
 sudo apt update
 
-sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
-# Add Docker repo
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" --yes
+
 
 # Install containerd
 sudo apt update
@@ -97,23 +105,27 @@ sudo sed -i 's/SystemdCgroup = abc/SystemdCgroup = true/g' /etc/containerd/confi
 # restart containerd
 sudo systemctl restart containerd
 sudo systemctl enable containerd
-systemctl status containerd
+sudo systemctl status containerd
 
 
 # Install Kubernetes
    
-sudo apt install curl apt-transport-https -y
 curl -fsSL  https://packages.cloud.google.com/apt/doc/apt-key.gpg|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/k8s.gpg
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-sudo apt update 
+sudo apt update
 
+#Kubernetes kurulumu
 sudo apt -y install kubelet=1.24.10-00 kubeadm=1.24.10-00 kubectl=1.24.10-00
 sudo apt-mark hold kubelet kubeadm kubectl
 
+
+#Kubernetes kurulum kontrolü ve başlatılması
 kubectl version --client && kubeadm version
+
 sudo systemctl enable kubelet
+
 
 sudo lsmod | grep br_netfilter
 
@@ -287,10 +299,6 @@ EOF'
 sudo sysctl -w vm.swappiness=1
 
 sudo sysctl -w vm.max_map_count=262144
-
-sudo bash -c 'cat << EOF > /etc/sysctl.conf
-vm.max_map_count=262144 elasticsearch
-EOF'
 
 
 sudo sysctl -p
