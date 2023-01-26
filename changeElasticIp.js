@@ -5,6 +5,6 @@ db.environment_settings.updateOne(
 
 
 db.environment_log_server.updateOne(
-{ "name": "ElasticsearchLocal" },
+{ "name": "elasticsearch" },
 { "$set": { "elasticHostList.$[].host": nodeIpPort } }
 );
