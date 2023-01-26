@@ -145,7 +145,7 @@ echo 'Wait, Installation in progress...'
 sleep 20
  
 # Allow workloads to be scheduled to the master node
-kubectl taint nodes `hostname`  node-role.kubernetes.io/master:NoSchedule-
+kubectl  taint nodes --all node-role.kubernetes.io/control-plane:NoSchedule-
  
 # Create an admin user that will be needed in order to access the Kubernetes Dashboard
 sudo bash -c 'cat << EOF > admin-user.yaml
