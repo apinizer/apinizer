@@ -100,7 +100,7 @@ sudo apt install -y containerd.io
 sudo mkdir -p /etc/containerd
 sudo containerd config default | sudo tee /etc/containerd/config.toml
 
-sudo sed -i 's/SystemdCgroup = abc/SystemdCgroup = true/g' /etc/containerd/config.toml
+sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 
 # restart containerd
 sudo systemctl restart containerd
