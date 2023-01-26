@@ -185,26 +185,26 @@ kubectl create clusterrolebinding kubernetes-dashboard -n kube-system --clusterr
 
 sudo apt update
 sudo apt install -y curl wget net-tools gnupg2 software-properties-common apt-transport-https ca-certificates lsb-release
-
-
+ 
+ 
 wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb
 sudo dpkg -i ./libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb
-
-
+ 
+ 
 curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/mongodb-6.gpg
 echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-
-
+ 
+ 
 sudo apt update
 sudo apt install mongodb-org -y
 
 sudo mkdir -p /etc/mongodb/keys/
-
+ 
 sudo chown -Rf $CURRENT_USER:$CURRENT_USER /etc/mongodb/keys
 sudo chmod -Rf 700 /etc/mongodb/keys
-
+ 
 sudo openssl rand -base64 756 > /etc/mongodb/keys/mongo-key
-
+ 
 sudo chmod -Rf 400 /etc/mongodb/keys/mongo-key
 sudo chown -Rf mongodb:mongodb /etc/mongodb
 
