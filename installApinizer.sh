@@ -105,8 +105,6 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/con
 # restart containerd
 sudo systemctl restart containerd
 sudo systemctl enable containerd
-sudo systemctl status containerd
-
 
 # Install Kubernetes
    
