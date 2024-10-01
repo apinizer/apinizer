@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: manager
-          image: apinizercloud/manager:2022.12.1
+          image: apinizercloud/manager:2024.09.0
           imagePullPolicy: IfNotPresent
           env:
             - name: MY_HOST_IP
