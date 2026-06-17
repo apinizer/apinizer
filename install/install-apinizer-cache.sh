@@ -3,7 +3,7 @@
 # Apinizer - Cache (Hazelcast) Installation (Virtual Server / Linux VM)
 # Installs the Cache module as a standalone package (embedded OpenJDK 25,
 # systemd service, Jasypt-encrypted configuration).
-# Aligned with https://docs.apinizer.com (tr/setup/sanal-sunucu)
+# Aligned with https://docs.apinizer.com (tr/setup/sanal-sunucu) xx
 #
 # The Cache holds quota counters, OIDC sessions, circuit-breaker state, etc.
 # It is mandatory when running multiple Workers so their counters stay in sync.
