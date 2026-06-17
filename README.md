@@ -17,22 +17,33 @@ You can find documentation at https://docs.apinizer.com.
 Official web site is at https://apinizer.com. 
 
 # Installation
-### Minimum Requirements
-- 4 Core CPU
-- 8 GB Ram
-#### Run the following script on Ubuntu 2020.04 LTS version to install Apinizer.
+### Minimum Requirements (single-server PoC / Test)
+- 8 Core CPU
+- 16 GB Ram
+- 200 GB Disk
+
+This all-in-one script installs MongoDB 8.0, Elasticsearch 8.17 and the Apinizer modules (API Manager + Gateway) as standalone Virtual Server (Linux VM) packages with embedded OpenJDK 25 — no Kubernetes/containers required. It is intended for PoC/Test environments only; for production topologies see https://docs.apinizer.com.
+
+#### Run the following script on Ubuntu 24.04 LTS version to install Apinizer.
 ```
 sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash
 ```
 
+#### Component-based installation
+To install each component (MongoDB, Elasticsearch, API Manager, Gateway) separately — for example on dedicated servers — use the per-component scripts under the [`install/`](install/README.md) directory. See [`install/README.md`](install/README.md) for detailed, step-by-step instructions.
+
 ## Configuration
 ### Step - 1: Login to Apinizer Management Console
 
-Default Address : **http://YOUR-IP-ADDRESS:32080** <br />
+Default Address : **http://YOUR-IP-ADDRESS:8080** <br />
 Default username : **admin** <br />
 Default password : **Apinizer.1!** <br />
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-0.png)
+
+### Step – 1.1: Add the Elasticsearch Connector
+Elasticsearch 8.x is installed with security (TLS + password) enabled, so the connector must be added manually.
+Go to **Administration -> Connection Management -> Elasticsearch** and add the connection using the `elastic` user, the password printed at the end of the installation (also stored in `/opt/elasticsearch/elasticsearch-passwords.txt`), and the `elastic-certificates.crt` certificate located under `/opt/elasticsearch/elasticsearch-8.17.10/config/certs/`.
 
 ### Step – 2: Create Index Lifecycle Policies and Index Templates
 Go to Elasticsearch Clusters Menu (Administration -> Server Management -> Elasticsearch Clusters)
@@ -44,13 +55,18 @@ After clicking to **red cards**, you should see them as below.
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-2.png)
 
-### Step – 3: Publish Environment on Kubernetes.
-Go to Gateway Environments (Administration -> Server Management -> Gateway Environments)
-Click **unpublished** button for Publish Environment on Kubernetes.
+### Step – 3: Define the Gateway as a Remote Environment and Publish.
+The Gateway (Worker) is installed as a standalone VM package by the script. In the Manager UI, register it as a Remote Gateway environment:
+Go to Gateway Runtimes (Administration -> Server Management -> Gateway Runtimes) and click **New**.
+- Platform: **Virtual Server**, Management Type: **Remote Gateway**
+- **Environment Name** must equal the Gateway's `APINIZER_ENVIRONMENT_NAME` (default `prod`)
+- Gateway Management API URL: `http://YOUR-IP-ADDRESS:8091`
+
+Then **Publish** the environment.
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-3.png)
 
-After clicking to **unpublished** button, you should see them as below after about 2 minutes.
+After publishing, you should see them as below after about 2 minutes.
 
 ![alt text](https://github.com/apinizer/apinizer/blob/main/images/image-4.png)
 

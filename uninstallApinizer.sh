@@ -1,48 +1,44 @@
 #!/bin/sh
 
-curl https://api.countapi.xyz/hit/apinizerUninstall
-
 ######### sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/uninstallApinizer.sh | bash
-### Uninstall Elasticsearch
+#
+# Uninstalls a single-server Virtual Server (Linux VM) Apinizer installation:
+# Apinizer standalone modules, MongoDB and Elasticsearch.
 
-### Uninstall MongoDB
-sudo service mongod stop
+### Uninstall Apinizer modules (standalone VM packages)
+for svc in apimanager apiworker apicache apiintegration apiportal; do
+  sudo systemctl stop "apinizer-${svc}" 2>/dev/null
+  sudo systemctl disable "apinizer-${svc}" 2>/dev/null
+  sudo rm -f "/etc/systemd/system/apinizer-${svc}.service"
+done
 
-sudo apt-get purge mongodb-org* -y
-
-sudo rm -rf /var/log/mongodb
-
-sudo rm -rf /var/lib/mongodb
-
-### Uninstall Kubernetes
-sudo kubeadm reset -f
-sudo apt purge kubectl kubeadm kubelet kubernetes-cni -y
-sudo apt autoremove -y
-sudo rm -rf /etc/kubernetes/; sudo rm -fr ~/.kube/; sudo rm -fr /var/lib/etcd; sudo rm -rf /var/lib/cni/
-sudo rm -rf /etc/cni /etc/kubernetes /var/lib/dockershim /var/lib/etcd /var/lib/kubelet /var/run/kubernetes ~/.kube/*
+sudo rm -rf /opt/apinizer-manager /opt/apinizer-worker /opt/apinizer-cache /opt/apinizer-integration /opt/apinizer-portal
 
 sudo systemctl daemon-reload
 
-# remove all running docker containers
-docker rm -f `docker ps -a | grep "k8s_" | awk '{print $1}'`
-
-### Uninstall Docker
-sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli
-sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce  
-
-sudo rm -rf /var/lib/docker /etc/docker
-sudo rm -rf /etc/apparmor.d/docker
-sudo groupdel docker
-sudo rm -rf /var/run/docker.sock
+### Uninstall MongoDB
+sudo apt-mark unhold mongodb-org* 2>/dev/null
+sudo systemctl stop mongod
+sudo apt-get purge mongodb-org* -y
+sudo rm -rf /var/log/mongodb
+sudo rm -rf /var/lib/mongodb
+sudo rm -rf /etc/mongodb /etc/mongod.conf
+sudo rm -rf /etc/apt/sources.list.d/mongodb-org-8.0.list /etc/apt/trusted.gpg.d/mongodb-8.gpg
 
 ### Uninstall Elasticsearch
 sudo systemctl stop elasticsearch
 sudo rm -rf /opt/elasticsearch
-
+sudo rm -rf /data/elastic-data /data/elastic-snapdata
 sudo rm -rf /etc/systemd/system/elasticsearch.service
+sudo rm -rf /etc/sysctl.d/99-elasticsearch.conf
 
 sudo systemctl daemon-reload
 
-rm -rf admin-user.yaml apinizer-initialdb.archive changeElasticIp.js mongoReplicaChange.js mongoUser.js role-binding.yaml
+### Remove the apinizer/elasticsearch system users (ignore errors if in use)
+sudo userdel apinizer 2>/dev/null
+sudo userdel elasticsearch 2>/dev/null
+
+### Remove leftover files
+rm -rf mongoReplicaChange.js mongoUser.js elastic-passwords.yaml libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 
 echo 'Apinizer uninstall Successfully'
