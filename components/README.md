@@ -139,6 +139,39 @@ Her script tek başına çalışabilir; ihtiyacınız olan bileşeni ilgili sunu
 
 ---
 
+## Lisans Anahtarı
+
+API Manager kurulduktan ve **ilk kez başladıktan sonra** lisans anahtarınızı girmeniz gerekir (lisans olmadan Yönetim Konsolu tam çalışmaz).
+
+1. Lisansınızı [apinizer.com/get-started](https://apinizer.com/get-started) sayfasından oluşturun. `apinizerLicense.txt` dosyası e-posta ile gönderilir; içindeki anahtar lisans anahtarınızdır.
+
+2. Anahtarı MongoDB'deki `general_settings` koleksiyonuna yazın:
+
+```bash
+vi license.js
+```
+
+```javascript
+db.general_settings.updateOne(
+  {"_class":"GeneralSettings"},
+  { $set: { licenseKey: '<LISANS_ANAHTARINIZ>'}}
+)
+```
+
+```bash
+mongosh "mongodb://<MONGO_IP>:25080/apinizerdb" --authenticationDatabase "admin" -u "apinizer" -p '<MONGO_PASSWORD>' < license.js
+```
+
+`Matched: 1, Modified: 1` benzeri bir çıktı görmeniz beklenir. Ardından `http://<SUNUCU_IP>:8080` adresinden giriş yapabilirsiniz.
+
+> **Otomatik uygulama:** Manager scriptini lisans anahtarıyla çalıştırırsanız bu adım otomatik yapılır (script `mongosh` ile `general_settings` belgesini günceller):
+>
+> ```bash
+> sudo -E APINIZER_LICENSE_KEY='<LISANS_ANAHTARINIZ>' bash components/install-apinizer-manager.sh
+> ```
+
+---
+
 ## Kurulum Sonrası
 
 1. **Yönetim arayüzü:** `http://<SUNUCU_IP>:8080`

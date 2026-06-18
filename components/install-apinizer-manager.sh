@@ -86,6 +86,23 @@ sudo systemctl enable apinizer-apimanager 2>/dev/null
 echo 'Wait, API Manager is starting...'
 sleep 45
 
+### 6.1) Optional: apply the license key (https://apinizer.com/get-started)
+# The license is e-mailed as apinizerLicense.txt. Provide its key via
+# APINIZER_LICENSE_KEY to write it into MongoDB automatically; otherwise apply
+# it later (see README "Lisans Anahtari"). Requires the Manager to have started
+# at least once so the general_settings document exists.
+if [ -n "${APINIZER_LICENSE_KEY}" ]; then
+  if command -v mongosh >/dev/null 2>&1; then
+    echo "Applying Apinizer license key to ${MONGO_DB}..."
+    echo "db.general_settings.updateOne({\"_class\":\"GeneralSettings\"}, { \$set: { licenseKey: '${APINIZER_LICENSE_KEY}'}})" \
+      | mongosh "mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}" --authenticationDatabase admin -u "${MONGO_USER}" -p "${MONGO_PASSWORD}" --quiet \
+      && echo "License applied." \
+      || echo "UYARI: Lisans uygulanamadi; README'deki manuel adimi izleyin."
+  else
+    echo "UYARI: mongosh bulunamadi; lisansi manuel girin (README: Lisans Anahtari)."
+  fi
+fi
+
 ### 7) Verify
 curl -fsS http://127.0.0.1:8080/management/health || echo "Health check not ready yet; check: sudo journalctl -u apinizer-apimanager -f"
 
@@ -95,4 +112,10 @@ echo "============================================================"
 echo "Apinizer Management Console : http://$NODE_IP:8080"
 echo "  default user: admin   password: Apinizer.1!"
 echo "  service: apinizer-apimanager   logs: journalctl -u apinizer-apimanager -f"
+if [ -z "${APINIZER_LICENSE_KEY}" ]; then
+  echo
+  echo "  LICENSE: not applied. Get it from https://apinizer.com/get-started"
+  echo "  and apply the 'Lisans Anahtari' step in the README, or re-run with:"
+  echo "    sudo -E APINIZER_LICENSE_KEY='<key>' bash components/install-apinizer-manager.sh"
+fi
 echo "============================================================"
