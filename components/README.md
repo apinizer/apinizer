@@ -73,7 +73,7 @@ sudo bash installApinizer.sh
 install-mongodb.sh  ->  install-elasticsearch.sh  ->  install-apinizer-manager.sh  ->  install-apinizer-worker.sh  ->  install-apinizer-cache.sh
 ```
 
-Orchestrator, `install/` klasöründeki dosyaları yerelde bulursa onları, bulamazsa repodan indirerek çalıştırır. Tek satırlık kurulum da çalışır:
+Orchestrator, `components/` klasöründeki dosyaları yerelde bulursa onları, bulamazsa repodan indirerek çalıştırır. Tek satırlık kurulum da çalışır:
 
 ```bash
 sudo curl -s https://raw.githubusercontent.com/apinizer/apinizer/main/installApinizer.sh | bash

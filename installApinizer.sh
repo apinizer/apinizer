@@ -18,24 +18,24 @@ echo 'Started Apinizer API Management Platform Installation'
 #
 # It runs the per-component installers in order. Each component can also be
 # installed independently (e.g. on dedicated servers) by running the matching
-# script under the install/ directory:
+# script under the components/ directory:
 #
-#   install/install-mongodb.sh           -> MongoDB 8.0 (single-node replica set)
-#   install/install-elasticsearch.sh     -> Elasticsearch 8.17 (TLS + security)
-#   install/install-apinizer-manager.sh  -> API Manager (VM standalone)
-#   install/install-apinizer-worker.sh   -> Worker / API Gateway (VM standalone)
-#   install/install-apinizer-cache.sh    -> Cache / Hazelcast (VM standalone)
+#   components/install-mongodb.sh           -> MongoDB 8.0 (single-node replica set)
+#   components/install-elasticsearch.sh     -> Elasticsearch 8.17 (TLS + security)
+#   components/install-apinizer-manager.sh  -> API Manager (VM standalone)
+#   components/install-apinizer-worker.sh   -> Worker / API Gateway (VM standalone)
+#   components/install-apinizer-cache.sh    -> Cache / Hazelcast (VM standalone)
 
-BASE_URL="https://raw.githubusercontent.com/apinizer/apinizer/main/install"
+BASE_URL="https://raw.githubusercontent.com/apinizer/apinizer/main/components"
 SCRIPT_DIR="$(cd "$(dirname "$0")" 2>/dev/null && pwd)"
 
-# Runs a module from the local install/ directory if present, otherwise
-# downloads it from the repository (supports `curl ... | bash` usage).
+# Runs a component installer from the local components/ directory if present,
+# otherwise downloads it from the repository (supports `curl ... | bash` usage).
 run_module() {
   module="$1"
-  if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/install/$module" ]; then
-    echo ">>> Running local module: install/$module"
-    bash "$SCRIPT_DIR/install/$module"
+  if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/components/$module" ]; then
+    echo ">>> Running local component: components/$module"
+    bash "$SCRIPT_DIR/components/$module"
   else
     echo ">>> Downloading and running module: $module"
     curl -fsSL "$BASE_URL/$module" -o "/tmp/$module" && bash "/tmp/$module"
