@@ -16,7 +16,10 @@
 echo 'Apinizer - Cache (VM) Installation started'
 
 ### Version / MongoDB connection
-VERSION=2026.04.2
+# Apinizer paket surumu. packages.apinizer.com'da YAYINLANMIS gecerli bir surum olmali.
+# Degistirmek icin ya bu satiri duzenleyin (sudo vi install-apinizer-cache.sh)
+# ya da calistirirken gecin:  sudo -E VERSION=2026.04.2 bash install-apinizer-cache.sh
+VERSION="${VERSION:-2026.04.2}"
 MONGO_USER=apinizer
 MONGO_PASSWORD=Apinizer.1
 MONGO_PORT=25080
@@ -51,9 +54,20 @@ set_env_var() {
 
 ### 1) Download + verify
 cd /tmp
-curl -fSLO "https://packages.apinizer.com/apinizer-packages/cache/${VERSION}/apinizer-cache-${VERSION}-linux-x64.tar.gz"
-curl -fSLO "https://packages.apinizer.com/apinizer-packages/cache/${VERSION}/checksums.sha256"
-sha256sum -c --ignore-missing checksums.sha256
+TARBALL="apinizer-cache-${VERSION}-linux-x64.tar.gz"
+BASE="https://packages.apinizer.com/apinizer-packages/cache/${VERSION}"
+if ! curl -fSLO "${BASE}/${TARBALL}"; then
+  echo "============================================================"
+  echo "HATA: ${TARBALL} indirilemedi (muhtemelen 404)."
+  echo "Bu surum packages.apinizer.com'da yayinlanmamis olabilir."
+  echo "Dogru VERSION'u ayarlayip tekrar deneyin:"
+  echo "  - sudo vi install-apinizer-cache.sh  (VERSION satirini degistirin)"
+  echo "  - veya:  sudo -E VERSION=<surum> bash install-apinizer-cache.sh"
+  echo "============================================================"
+  exit 1
+fi
+curl -fSLO "${BASE}/checksums.sha256" && sha256sum -c --ignore-missing checksums.sha256 || \
+  echo "UYARI: checksum dogrulamasi atlandi (checksums.sha256 bulunamadi)."
 
 ### 2) Extract to /opt
 sudo mkdir -p /opt

@@ -19,6 +19,30 @@ Bu klasör, Apinizer'ı **bileşen bazında** kurmak için tek başına çalış
 
 ---
 
+## Sürüm Seçimi (VERSION) — ÖNEMLİ
+
+Apinizer paketleri (`manager`, `worker`, `cache`) `packages.apinizer.com` üzerinden indirilir. Scriptlerdeki varsayılan `VERSION` değeri o an **yayınlanmamış** olabilir; bu durumda indirme `404` döner ve kurulum durur. Kurmadan önce indirmek istediğiniz sürümü ayarlayın.
+
+**Yöntem 1 — Scripti düzenleyin:**
+
+```bash
+sudo vi install-apinizer-manager.sh
+# Baştaki satırı kendi sürümünüzle değiştirin:
+#   VERSION="${VERSION:-2026.04.2}"   ->   VERSION="${VERSION:-<istediğiniz-sürüm>}"
+```
+
+**Yöntem 2 — Çalıştırırken ortam değişkeniyle geçin (script dosyasını değiştirmeden):**
+
+```bash
+sudo -E VERSION=2026.04.2 bash install-apinizer-manager.sh
+sudo -E VERSION=2026.04.2 bash install-apinizer-worker.sh
+sudo -E VERSION=2026.04.2 bash install-apinizer-cache.sh
+```
+
+> Aynı kural Worker ve Cache scriptleri için de geçerlidir. Hatalı/yayınlanmamış bir sürüm verilirse scriptler net bir hata mesajıyla durur (sonsuz/anlaşılmaz hata vermez).
+
+---
+
 ## Ön Gereksinimler
 
 - **İşletim sistemi:** Ubuntu 24.04 LTS (önerilir); RHEL/Rocky/Alma 8+ de desteklenir
@@ -90,7 +114,10 @@ Her script tek başına çalışabilir; ihtiyacınız olan bileşeni ilgili sunu
 
 ### `install-elasticsearch.sh`
 - Elasticsearch 8.17.10 kurar (güvenlik + TLS aktif).
-- Built-in kullanıcı şifrelerini otomatik üretir ve **scriptin çalıştırıldığı dizine `elastic-passwords.yaml`** olarak kaydeder.
+- Built-in kullanıcı şifrelerini otomatik üretir ve **scriptin çalıştırıldığı dizine `elastic-passwords.yaml`** olarak kaydeder. Tüm şifreler ayrıca `/opt/elasticsearch/elasticsearch-passwords.txt` dosyasına da yazılır.
+- Şifre üretmeden önce Elasticsearch'in HTTP olarak gerçekten **ayağa kalkmasını bekler** (sabit `sleep` yerine aktif kontrol). ES yeterince hızlı açılmazsa veya cluster hazır olmazsa, `setup-passwords` tekrar denenir ve başarısız olursa script **net bir hata mesajıyla durur** ("password üretilemedi" yerine sessizce devam etmez).
+
+> **Şifre üretilemedi hatası alırsanız:** Genellikle ES tam ayağa kalkmamıştır. `sudo journalctl -u elasticsearch -f` ile logları kontrol edin; `vm.max_map_count`, bellek (heap) ve disk izinlerinin uygun olduğundan emin olun. ES bir kez tam açıldıktan sonra scripti tekrar çalıştırmak yerine `elasticsearch-reset-password -u elastic` ile şifreyi sıfırlayabilirsiniz (`setup-passwords auto` yalnızca bir kez çalışır).
 
 ### `install-apinizer-manager.sh`
 - API Manager paketini `packages.apinizer.com`'dan indirir, checksum doğrular, `/opt/apinizer-manager`'a açar.
